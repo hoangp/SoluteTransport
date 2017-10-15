@@ -15,19 +15,17 @@
 %% Get particle boundary conditions
 
 % index location of the particle
-ip = ceil(x/dx);
-jp = ceil(y/dx);
-kp = ceil(z/dx);
+[i,j,k] = get_ijk (x,y,z,dx);
 
 % location of the edges
-x1 = dx*(ip-1); x2 = dx*ip;
-y1 = dx*(jp-1); y2 = dx*jp;
-z1 = dx*(kp-1); z2 = dx*kp;
+x1 = dx*(i-1); x2 = dx*i;
+y1 = dx*(j-1); y2 = dx*j;
+z1 = dx*(k-1); z2 = dx*k;
 
 % velocities on the faces normal to each direction
-u1 = u(ip-1,jp,kp); u2 = u(ip,jp,kp);
-v1 = v(ip,jp-1,kp); v2 = v(ip,jp,kp);
-w1 = w(ip,jp,kp-1); w2 = w(ip,jp,kp);
+u1 = u(i-1,j,k); u2 = u(i,j,k);
+v1 = v(i,j-1,k); v2 = v(i,j,k);
+w1 = w(i,j,k-1); w2 = w(i,j,k);
 
 % short variables names
 X1 = x-x1; X2 = x2-x;
@@ -36,9 +34,9 @@ Z1 = z-z1; Z2 = z2-z;
 U = u2-u1; V = v2-v1; W = w2-w1;
 
 % geometry of the edge
-gx1 = g(ip-1,jp,kp); gx2 = g(ip+1,jp,kp);
-gy1 = g(ip,jp-1,kp); gy2 = g(ip,jp+1,kp);
-gz1 = g(ip,jp,kp-1); gz2 = g(ip,jp,kp+1);
+gx1 = g(i-1,j,k); gx2 = g(i+1,j,k);
+gy1 = g(i,j-1,k); gy2 = g(i,j+1,k);
+gz1 = g(i,j,k-1); gz2 = g(i,j,k+1);
 
 % short variables names
 gX = gx1+gx2; gY = gy1+gy2; gZ = gz1+gz2;
