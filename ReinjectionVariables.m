@@ -65,4 +65,3 @@ Woutlet.list  = reshape(Woutlet.plane,[],1);
 Woutlet.limit = mean(Woutlet.plane (Woutlet.plane~=0)) * REINJECTION_LIMIT;
 Woutlet.index = find(Woutlet.list > Woutlet.limit);
 Woutlet.list  = Woutlet.list(Woutlet.index);
-

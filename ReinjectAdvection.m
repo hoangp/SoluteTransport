@@ -23,10 +23,13 @@
 
 if gFlow == FLOW_X
     [x,y,z] = reinject_advection_X (Uinlet,x,y,z,dx,gL);
+    event.ReinjectAdvectionX = event.ReinjectAdvectionX + 1;
 elseif gFlow == FLOW_Y
     [x,y,z] = reinject_advection_Y (Vinlet,x,y,z,dx,gL);
+    event.ReinjectAdvectionY = event.ReinjectAdvectionY + 1;
 else % gFlow == FLOW_Z
     [x,y,z] = reinject_advection_Z (Winlet,x,y,z,dx,gL);
+    event.ReinjectAdvectionZ = event.ReinjectAdvectionZ + 1;
 end
 
 %% Nested Functions

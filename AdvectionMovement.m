@@ -22,7 +22,7 @@
 %
 
 % Particle location before advection
-xpt0 = x; ypt0 = y; zpt0 = z;
+xBA = x; yBA = y; zBA = z;
 
 % Streamline-tracing algorithm 
 StreamlineTracing
@@ -41,7 +41,9 @@ else
     [i,j,k] = get_ijk (x,y,z,dx);    
     if g(i,j,k) == 1
         % if particle hits a solid surface -> NO MOVE
-        x = xpt0; y = ypt0; z = zpt0; % restore location
+        x = xBA; y = yBA; z = zBA; % restore location
         advectionX = 0; advectionY = 0; advectionZ = 0; % update advection displacement
+        
+        event.AdvectionHitSolid = event.AdvectionHitSolid + 1;
     end
 end

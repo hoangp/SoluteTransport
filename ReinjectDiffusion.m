@@ -26,16 +26,22 @@
 
 if out_location == OUT_X2
     [x,y,z] = reinject_diffusion_X (Uinlet,x,y,z,dx,gL);
+    event.ReinjectDiffusionX = event.ReinjectDiffusionX + 1;
 elseif out_location == OUT_X1
     [x,y,z] = reinject_diffusion_X (Uoutlet,x,y,z,dx,gL);
+    event.ReinjectDiffusionX = event.ReinjectDiffusionX + 1;
 elseif out_location == OUT_Y2
     [x,y,z] = reinject_diffusion_Y (Vinlet,x,y,z,dx,gL);
+    event.ReinjectDiffusionY = event.ReinjectDiffusionY + 1;
 elseif out_location == OUT_Y1
     [x,y,z] = reinject_diffusion_Y (Voutlet,x,y,z,dx,gL);
+    event.ReinjectDiffusionY = event.ReinjectDiffusionY + 1;
 elseif out_location == OUT_Z2
     [x,y,z] = reinject_diffusion_Z (Winlet,x,y,z,dx,gL);
+    event.ReinjectDiffusionZ = event.ReinjectDiffusionZ + 1;
 elseif out_location == OUT_Z1
     [x,y,z] = reinject_diffusion_Z (Woutlet,x,y,z,dx,gL);
+    event.ReinjectDiffusionZ = event.ReinjectDiffusionZ + 1;
 end
 
 %% Nested Functions
