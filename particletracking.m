@@ -1,16 +1,14 @@
-function [run_Npe,xpt,ypt,zpt,flow_displacement,flow_variance,inside_solid] = ...
-    particletracking(g,u,v,w,dt,dx,L,gFlow,gLen,geo_zeta,...
+function [xpt,ypt,zpt,flow_displacement,flow_variance,inside_solid] = ...
+    particletracking(g,u,v,w,dt,dx,gFlow,gLen,geo_zeta,...
         micro_zeta,chance_into_solid,inside_limit,inside_solid,...
-        xpt,ypt,zpt,xpt0,ypt0,zpt0,Ntimestep)
-
-% constants
-DM_LIQUIDS = 10^3; % free molecular diffusion in liquids (microm2.s-1)
+        prev_flow_displacement,xpt,ypt,zpt,xpt0,ypt0,zpt0,Ntimestep)
 
 % results
-Npe = [mean(u(u~=0)),mean(v(v~=0)),mean(w(w~=0))] * L / DM_LIQUIDS;
 Nparticle = length (xpt); % number of particles
 displacement = zeros(Nparticle,3); % particle displacement (in 3 direction)
 variance = zeros(Ntimestep,3); % variance of displacement (in 3 direction)
+
+displacement(:,gFlow) = prev_flow_displacement;
 
 % simulation starts
 for t = 1:Ntimestep
@@ -586,7 +584,6 @@ for t = 1:Ntimestep
 end % for Ntimestep
 
 % return value for main flow direction only
-run_Npe = Npe(gFlow);
 flow_displacement = displacement(:,gFlow);
 flow_variance = variance(:,gFlow);
 
