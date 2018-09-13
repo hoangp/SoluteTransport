@@ -1,14 +1,21 @@
-function [xpt,ypt,zpt,flow_displacement,flow_variance,inside_solid] = ...
-    particletracking(g,u,v,w,dt,dx,gFlow,gLen,geo_zeta,...
+function [run_Npe,xpt,ypt,zpt,displacement, flow_displacement, flow_variance,inside_solid] = ...
+    particletracking(g,u,v,w,dt,dx,L,gFlow,gLen,geo_zeta,...
         micro_zeta,chance_into_solid,inside_limit,inside_solid,...
-        prev_flow_displacement,xpt,ypt,zpt,xpt0,ypt0,zpt0,Ntimestep)
+        displacement,xpt,ypt,zpt,xpt0,ypt0,zpt0,Ntimestep)
+
+% constants
+DM_LIQUIDS = 10^3; % free molecular diffusion in liquids (microm2.s-1)
 
 % results
+Npe = [mean(u(u~=0)),mean(v(v~=0)),mean(w(w~=0))] * L / DM_LIQUIDS;
 Nparticle = length (xpt); % number of particles
-displacement = zeros(Nparticle,3); % particle displacement (in 3 direction)
+%displacement = zeros(Nparticle,3); % particle displacement (in 3 direction)
 variance = zeros(Ntimestep,3); % variance of displacement (in 3 direction)
 
-displacement(:,gFlow) = prev_flow_displacement;
+% (is,js,ks) store voxel location when particle enter solid
+is = ceil(xpt/dx);
+js = ceil(ypt/dx);
+ks = ceil(zpt/dx);
 
 % simulation starts
 for t = 1:Ntimestep
@@ -469,6 +476,13 @@ for t = 1:Ntimestep
                 inside_solid(p) = false;               
             end
             
+            % cant not move out of solid voxel unless move to pore space
+            if inside_solid(p) == true
+                if (is(p) ~= i || js(p) ~= j || ks(p) ~= k)
+                    x = xBD; y = yBD; z = zBD; % reset location as before diffusion
+                end
+            end
+            
         else
             %% diffusion movement within the system (as normal)
             i=ceil(x/dx); j=ceil(y/dx); k=ceil(z/dx);
@@ -519,7 +533,11 @@ for t = 1:Ntimestep
                             end
                         end
                     end
-                    diffusion = [x - xBD, y - zBD, z - zBD]; % update diffusion              
+                    diffusion = [x - xBD, y - zBD, z - zBD]; % update diffusion     
+                    
+                    % Update (is,js,ks) the voxel location when entering solid
+                    is(p)=ceil(x/dx); js(p)=ceil(y/dx); ks(p)=ceil(z/dx);
+                    
                 else
                     %% if hit a surface -> bounce movement (as normal)
                     
@@ -584,6 +602,7 @@ for t = 1:Ntimestep
 end % for Ntimestep
 
 % return value for main flow direction only
+run_Npe = Npe(gFlow);
 flow_displacement = displacement(:,gFlow);
 flow_variance = variance(:,gFlow);
 
